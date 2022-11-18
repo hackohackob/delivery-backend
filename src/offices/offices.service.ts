@@ -1,26 +1,41 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { CreateOfficeDto } from './dto/create-office.dto';
 import { UpdateOfficeDto } from './dto/update-office.dto';
+import { Office, OfficeDocument } from './entities/office.schema';
 
 @Injectable()
 export class OfficesService {
+  constructor(
+    @InjectModel(Office.name) private officeModel: Model<OfficeDocument>,
+  ) {}
+
   create(createOfficeDto: CreateOfficeDto) {
-    return 'This action adds a new office';
+    const newOffice = new this.officeModel(createOfficeDto);
+    return newOffice.save();
   }
 
   findAll() {
-    return `This action returns all offices`;
+    return this.officeModel.find().exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} office`;
+  findOne(id: ObjectId) {
+    return this.officeModel.findById(id).exec();
   }
 
-  update(id: number, updateOfficeDto: UpdateOfficeDto) {
-    return `This action updates a #${id} office`;
+  update(id: ObjectId, updateOfficeDto: UpdateOfficeDto) {
+    return this.officeModel.updateOne(
+      {
+        _id: id,
+      },
+      updateOfficeDto,
+    );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} office`;
+  remove(id: ObjectId) {
+    return this.officeModel.deleteOne({
+      _id: id,
+    });
   }
 }
