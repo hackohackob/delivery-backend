@@ -1,11 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
+import { Package } from 'src/packages/entities/package.schema';
 
 export type OfficeDocument = HydratedDocument<Office>;
 
 @Schema()
 export class Office {
-  @Prop()
+  @Prop({ required: true })
   name: string;
 
   @Prop()
@@ -14,14 +15,14 @@ export class Office {
   @Prop()
   phone: string;
 
-  @Prop()
+  @Prop({ required: true })
   lat: number;
 
-  @Prop()
+  @Prop({ required: true })
   lng: number;
 
-  @Prop()
-  packages: any[]; // TODO: Create Package Schema and use it here
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Package' }] })
+  packages: Package[];
 }
 
 export const OfficeSchema = SchemaFactory.createForClass(Office);

@@ -25,11 +25,12 @@ export class OfficesService {
   }
 
   update(id: ObjectId, updateOfficeDto: UpdateOfficeDto) {
-    return this.officeModel.updateOne(
+    return this.officeModel.findOneAndUpdate(
       {
         _id: id,
       },
       updateOfficeDto,
+      { new: true },
     );
   }
 
@@ -37,5 +38,9 @@ export class OfficesService {
     return this.officeModel.deleteOne({
       _id: id,
     });
+  }
+
+  getOfficeLocation(id: ObjectId) {
+    return this.officeModel.findById(id).select('lat lng').exec();
   }
 }
