@@ -6,12 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  // CacheInterceptor,
+  // UseInterceptors,
 } from '@nestjs/common';
 import { PackagesService } from './packages.service';
 import { CreatePackageDto } from './dto/create-package.dto';
 import { UpdatePackageDto } from './dto/update-package.dto';
 import mongoose from 'mongoose';
 
+//TODO: @UseInterceptors(CacheInterceptor)
 @Controller('packages')
 export class PackagesController {
   constructor(private readonly packagesService: PackagesService) {}
