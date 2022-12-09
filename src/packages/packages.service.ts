@@ -25,7 +25,9 @@ export class PackagesService {
   }
 
   findOne(id: mongoose.Schema.Types.ObjectId) {
-    return this.packageModel.findById(id).populate('destinationOffice');
+    return this.packageModel
+      .findById(id)
+      .populate('originOffice destinationOffice');
   }
 
   update(
