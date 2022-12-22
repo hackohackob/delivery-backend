@@ -17,7 +17,7 @@ export class OfficesService {
   }
 
   findAll() {
-    return this.officeModel.find().exec();
+    return this.officeModel.find().populate('packages').exec();
   }
 
   findOne(id: ObjectId) {

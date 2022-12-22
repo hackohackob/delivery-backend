@@ -15,13 +15,13 @@ export class PackagesService {
 
   async create(createPackageDto: CreatePackageDto) {
     let createdPackage = new this.packageModel(createPackageDto);
-    createdPackage = await createdPackage.populate('destinationOffice');
+    createdPackage = await createdPackage.populate('originOffice destinationOffice');
     this.calculcatePrice(createdPackage);
     return createdPackage.save();
   }
 
   findAll() {
-    return this.packageModel.find();
+    return this.packageModel.find().populate('originOffice destinationOffice');
   }
 
   findOne(id: mongoose.Schema.Types.ObjectId) {
