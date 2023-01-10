@@ -15,18 +15,25 @@ export class PackagesService {
 
   async create(createPackageDto: CreatePackageDto) {
     let createdPackage = new this.packageModel(createPackageDto);
-    createdPackage = await createdPackage.populate('originOffice destinationOffice');
+    createdPackage = await createdPackage.populate(
+      'originOffice destinationOffice',
+    );
     this.calculcatePrice(createdPackage);
     return createdPackage.save();
   }
 
   findAll() {
-    return this.packageModel.find().populate('originOffice destinationOffice');
+    return this.packageModel
+      .find({ isDeleted: false })
+      .populate('originOffice destinationOffice');
   }
 
   findOne(id: mongoose.Schema.Types.ObjectId) {
     return this.packageModel
-      .findById(id)
+      .find({
+        _id: id,
+        isDeleted: false,
+      })
       .populate('originOffice destinationOffice');
   }
 
@@ -34,11 +41,27 @@ export class PackagesService {
     id: mongoose.Schema.Types.ObjectId,
     updatePackageDto: UpdatePackageDto,
   ) {
-    return `This action updates a #${id} package`;
+    return this.packageModel
+      .findOneAndUpdate(
+        {
+          _id: id,
+        },
+        updatePackageDto,
+        { new: true },
+      )
+      .populate('originOffice destinationOffice');
   }
 
   remove(id: mongoose.Schema.Types.ObjectId) {
-    return `This action removes a #${id} package`;
+    return this.packageModel.findOneAndUpdate(
+      {
+        _id: id,
+      },
+      {
+        isDeleted: true,
+      },
+      { new: true },
+    );
   }
 
   calculcatePrice(pack: PackageDocument) {
