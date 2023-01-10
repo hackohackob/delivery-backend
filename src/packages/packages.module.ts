@@ -12,5 +12,6 @@ import { UtilsModule } from 'src/utils/utils.module';
   ],
   controllers: [PackagesController],
   providers: [PackagesService],
+  exports: [PackagesService],
 })
 export class PackagesModule {}

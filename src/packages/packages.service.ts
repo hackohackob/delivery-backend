@@ -23,16 +23,13 @@ export class PackagesService {
   }
 
   findAll() {
-    return this.packageModel
-      .find({ isDeleted: false })
-      .populate('originOffice destinationOffice');
+    return this.packageModel.find().populate('originOffice destinationOffice');
   }
 
   findOne(id: mongoose.Schema.Types.ObjectId) {
     return this.packageModel
       .findOne({
         _id: id,
-        isDeleted: false,
       })
       .populate('originOffice destinationOffice');
   }
@@ -53,15 +50,9 @@ export class PackagesService {
   }
 
   remove(id: mongoose.Schema.Types.ObjectId) {
-    return this.packageModel.findOneAndUpdate(
-      {
-        _id: id,
-      },
-      {
-        isDeleted: true,
-      },
-      { new: true },
-    );
+    return this.packageModel.deleteOne({
+      _id: id,
+    });
   }
 
   calculcatePrice(pack: PackageDocument) {

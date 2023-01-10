@@ -13,6 +13,7 @@ import { HttpModule } from '@nestjs/axios';
 import { UtilsModule } from './utils/utils.module';
 import { TestingModule } from './temp/testing/testing.module';
 import { RoutesModule } from './routes/routes.module';
+import { MockModule } from './mock/mock.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { RoutesModule } from './routes/routes.module';
     DeliveriesModule,
     UtilsModule,
     TestingModule,
+    MockModule,
   ],
   controllers: [AppController],
   providers: [AppService],

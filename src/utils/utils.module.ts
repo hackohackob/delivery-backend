@@ -8,5 +8,6 @@ import { PriceService } from './price.service';
   imports: [HttpModule, RoutesModule],
   providers: [MapboxProvider, PriceService],
   exports: [MapboxProvider, PriceService],
+  controllers: [],
 })
 export class UtilsModule {}
