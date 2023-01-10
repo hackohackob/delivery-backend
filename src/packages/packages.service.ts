@@ -30,7 +30,7 @@ export class PackagesService {
 
   findOne(id: mongoose.Schema.Types.ObjectId) {
     return this.packageModel
-      .find({
+      .findOne({
         _id: id,
         isDeleted: false,
       })
