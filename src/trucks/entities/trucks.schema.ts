@@ -1,8 +1,5 @@
 import { SchemaFactory, Schema, Prop } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument } from 'mongoose';
-import { Office } from 'src/offices/entities/office.schema';
-import { Package } from 'src/packages/entities/package.schema';
-import { Route } from 'src/routes/entities/route.schema';
+import { HydratedDocument } from 'mongoose';
 import { TruckSize, TruckStatus } from './trucks.types';
 
 export type TruckDocument = HydratedDocument<Truck>;
@@ -25,12 +22,6 @@ export class Truck {
     default: TruckStatus.FREE,
   })
   status: string;
-
-  @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: Package }])
-  packages: Package[];
-
-  // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Delivery, default: null })
-  // currentDelivery?: Delivery;
 }
 
 export const TruckSchema = SchemaFactory.createForClass(Truck);
