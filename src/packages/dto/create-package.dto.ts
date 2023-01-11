@@ -1,7 +1,6 @@
 import { Optional } from '@nestjs/common';
-import { IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
 import { ObjectId } from 'mongoose';
-import { isNumber } from 'util';
 import { PackageSize } from '../entities/package-enums';
 
 export class CreatePackageDto {
@@ -17,5 +16,14 @@ export class CreatePackageDto {
   @IsNotEmpty()
   size: PackageSize;
 
-  isFragile: boolean;
+  @IsString()
+  @IsNotEmpty()
+  recipient: ObjectId;
+
+  @IsString()
+  description?: string;
+
+  @IsBoolean()
+  @Optional()
+  isFragile = false;
 }

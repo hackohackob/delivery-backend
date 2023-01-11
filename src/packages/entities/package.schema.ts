@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Types } from 'mongoose';
-import { Office, OfficeDocument } from 'src/offices/entities/office.schema';
+import { ClientDocument } from 'src/clients/entities/client.schema';
+import { OfficeDocument } from 'src/offices/entities/office.schema';
 import { PackageSize, PackageStatus } from './package-enums';
 
 export type PackageDocument = HydratedDocument<Package>;
@@ -23,6 +24,9 @@ export class Package {
 
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Office' })
   destinationOffice: Types.ObjectId | OfficeDocument;
+
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Client' })
+  recipient: Types.ObjectId | ClientDocument;
 
   @Prop({ type: Number })
   price: number;

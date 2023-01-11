@@ -29,14 +29,8 @@ export class Truck {
   @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: Package }])
   packages: Package[];
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Office, default: null })
-  originOffice?: Office;
-
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Office, default: null })
-  destinationOffice?: Office;
-
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Route, default: null })
-  currentRoute?: Route;
+  // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Delivery, default: null })
+  // currentDelivery?: Delivery;
 }
 
 export const TruckSchema = SchemaFactory.createForClass(Truck);

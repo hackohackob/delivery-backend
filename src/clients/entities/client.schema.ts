@@ -11,6 +11,9 @@ export class Client {
   @Prop({ required: true })
   phone: string;
 
+  @Prop({ required: true })
+  email: string;
+
   @Prop({ required: true, default: false })
   isDeleted: boolean;
 }
