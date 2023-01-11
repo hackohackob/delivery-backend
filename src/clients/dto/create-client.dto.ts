@@ -1,5 +1,4 @@
-import { Optional } from '@nestjs/common';
-import { IsString, IsNotEmpty, IsBoolean } from 'class-validator';
+import { IsString, IsNotEmpty } from 'class-validator';
 
 export class CreateClientDto {
   @IsString()
@@ -13,9 +12,4 @@ export class CreateClientDto {
   @IsString()
   @IsNotEmpty()
   email: string;
-
-  @IsBoolean()
-  @IsNotEmpty()
-  @Optional()
-  isDeleted: boolean;
 }
