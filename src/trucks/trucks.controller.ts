@@ -10,6 +10,7 @@ import {
 import { TrucksService } from './trucks.service';
 import { CreateTruckDto } from './dto/create-truck.dto';
 import { UpdateTruckDto } from './dto/update-truck.dto';
+import mongoose from 'mongoose';
 
 @Controller('trucks')
 export class TrucksController {
@@ -26,7 +27,7 @@ export class TrucksController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: mongoose.Schema.Types.ObjectId) {
     return this.trucksService.findOne(id);
   }
 

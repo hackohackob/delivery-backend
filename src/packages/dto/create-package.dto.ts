@@ -18,7 +18,7 @@ export class CreatePackageDto {
 
   @IsString()
   @IsNotEmpty()
-  recipient: ObjectId;
+  recipient: string;
 
   @IsString()
   description?: string;

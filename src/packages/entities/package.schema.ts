@@ -16,7 +16,7 @@ export class Package {
   @Prop()
   description?: string;
 
-  @Prop({ required: true, type: String, enum: PackageStatus })
+  @Prop({ required: true, type: String, enum: PackageStatus, default: PackageStatus.RECEIVED })
   status: PackageStatus;
 
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Office' })
