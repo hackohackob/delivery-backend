@@ -5,6 +5,7 @@ import { CreateOfficeDto } from './dto/create-office.dto';
 import { UpdateOfficeDto } from './dto/update-office.dto';
 import { Office, OfficeDocument } from './entities/office.schema';
 
+
 @Injectable()
 export class OfficesService {
   constructor(
@@ -17,7 +18,7 @@ export class OfficesService {
   }
 
   findAll() {
-    return this.officeModel.find().populate('packages').exec();
+    return this.officeModel.find().exec();
   }
 
   findOne(id: ObjectId) {

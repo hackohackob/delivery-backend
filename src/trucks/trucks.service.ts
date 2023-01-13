@@ -40,4 +40,8 @@ export class TrucksService {
       _id: id,
     });
   }
+
+  removeAll() {
+    return this.truckModel.remove({}).exec();
+  }
 }

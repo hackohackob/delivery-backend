@@ -27,7 +27,7 @@ export class RoutesService {
 
   getDistanceBetweenOffices(office1: Types.ObjectId, office2: Types.ObjectId) {
     // TODO: calculate the distance between two offices
-    console.log('distance between offices', office1, office2);
+    // console.log('distance between offices', office1, office2);
     return Math.round(Math.random() * 1000);
   }
 }

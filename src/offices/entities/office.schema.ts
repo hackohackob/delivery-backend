@@ -20,9 +20,6 @@ export class Office {
 
   @Prop({ required: true })
   lng: number;
-
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Package' }] })
-  packages: Package[];
 }
 
 export const OfficeSchema = SchemaFactory.createForClass(Office);

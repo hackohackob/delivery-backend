@@ -33,4 +33,8 @@ export class ClientsService {
   remove(id: mongoose.Schema.Types.ObjectId) {
     return this.clientModel.remove({ _id: id });
   }
+
+  removeAll() {
+    return this.clientModel.remove({}).exec();
+  }
 }

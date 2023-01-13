@@ -4,9 +4,17 @@ import { Client } from 'src/clients/entities/client.schema';
 import { Office } from 'src/offices/entities/office.schema';
 import { OfficesService } from 'src/offices/offices.service';
 import { CreatePackageDto } from 'src/packages/dto/create-package.dto';
-import { PackageSize } from 'src/packages/entities/package-enums';
+import {
+  PackageSize,
+  PackageStatus,
+} from 'src/packages/entities/package-enums';
 import { Package } from 'src/packages/entities/package.schema';
 import { PackagesService } from 'src/packages/packages.service';
+import { generateJson } from 'json-generator';
+import { TruckSize } from 'src/trucks/entities/trucks.types';
+import { Truck } from 'src/trucks/entities/trucks.schema';
+import { TrucksService } from 'src/trucks/trucks.service';
+import { CreateTruckDto } from 'src/trucks/dto/create-truck.dto';
 
 @Injectable()
 export class MockDataService {
@@ -15,8 +23,28 @@ export class MockDataService {
   constructor(
     private packageService: PackagesService,
     private officeService: OfficesService,
-    private clientService: ClientsService
+    private clientService: ClientsService,
+    private trucksService: TrucksService,
   ) {}
+
+  async generateTrucks(numberOfTrucks: number) {
+    const generatedTrucks: Truck[] = [];
+
+    for (let i = 0; i < numberOfTrucks; i++) {
+      const truckSizes = Object.keys(TruckSize).map((key) => TruckSize[key]);
+      const newTruckData = generateJson({
+        registrationNumber: 'maskInt;CB####PA',
+        size: `random;${JSON.stringify(truckSizes)}`,
+      });
+
+      const newTruck = await this.trucksService.create(
+        newTruckData as CreateTruckDto,
+      );
+      generatedTrucks.push(newTruck);
+    }
+
+    return generatedTrucks;
+  }
 
   async generatePackages(numberOfPackages: number) {
     const generatedPackages: Package[] = [];
@@ -24,23 +52,65 @@ export class MockDataService {
     for (let i = 0; i < numberOfPackages; i++) {
       const twoRandomOffices = await this.getTwoRandomOffices();
       const recipient = await this.getRandomRecepient();
-      console.log(twoRandomOffices);
-      const newPackage: CreatePackageDto = {
+      let newPackage = {
         originOffice: twoRandomOffices[0]['_id'],
         destinationOffice: twoRandomOffices[1]['_id'],
         isFragile: Math.random() < 0.5,
         recipient: recipient['_id'],
-        // generetes random PackageSize enum
-        size: PackageSize[Math.floor(Math.random() * 3)],
       };
 
-      console.log(newPackage);
+      // eslint-disable-next-line prettier/prettier
+      const packageSizes = Object.keys(PackageSize).map(key => PackageSize[key]);
+      // eslint-disable-next-line prettier/prettier
+      const packageStatuses = Object.keys(PackageStatus).map(key => PackageStatus[key]);
+      const generated = generateJson({
+        size: `random;${JSON.stringify(packageSizes)}`,
+        status: `random;${JSON.stringify(packageStatuses)}`,
+      });
 
-      generatedPackages.push(await this.packageService.create(newPackage));
+      newPackage = { ...newPackage, ...generated };
+
+      generatedPackages.push(
+        await this.packageService.create(newPackage as CreatePackageDto),
+      );
     }
 
-    return this.generatePackages;
+    return generatedPackages;
   }
+
+  async generateClients(numberOfClients: number) {
+    const generatedClients: Client[] = [];
+
+    for (let i = 0; i < numberOfClients; i++) {
+      const newClientData: any = generateJson({
+        name: 'fullName',
+        phone: 'maskInt;089#######',
+      });
+
+      newClientData.email =
+        newClientData.name.replace(' ', '.').toLowerCase() + '@gmail.com';
+
+      console.log(newClientData);
+
+      const newClient = await this.clientService.create(newClientData);
+      generatedClients.push(newClient);
+    }
+
+    return generatedClients;
+  }
+
+  deletePackages() {
+    return this.packageService.removeAll();
+  }
+
+  deleteTrucks() {
+    return this.trucksService.removeAll();
+  }
+
+  deleteClients() {
+    return this.clientService.removeAll();
+  }
+
 
   async getTwoRandomOffices(): Promise<Office[]> {
     if (this.offices.length === 0) {
@@ -59,5 +129,4 @@ export class MockDataService {
 
     return clients[randomIndex];
   }
-
 }

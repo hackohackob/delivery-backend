@@ -55,6 +55,10 @@ export class PackagesService {
     });
   }
 
+  removeAll() {
+    return this.packageModel.remove({}).exec();
+  }
+
   calculcatePrice(pack: PackageDocument) {
     const price = this.priceService.calculatePrice(
       (pack.originOffice._id || pack.originOffice) as Types.ObjectId,

@@ -30,10 +30,6 @@ export class CreateOfficeDto {
   phone: string;
 
   @IsOptional()
-  @IsArray()
-  packages: any[]; // TODO: Create Package Schema and use it here
-
-  @IsOptional()
   @IsString()
   @IsIn(['active', 'inactive'])
   status: string;
