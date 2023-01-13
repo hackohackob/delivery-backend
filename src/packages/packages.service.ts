@@ -16,14 +16,14 @@ export class PackagesService {
   async create(createPackageDto: CreatePackageDto) {
     let createdPackage = new this.packageModel(createPackageDto);
     createdPackage = await createdPackage.populate(
-      'originOffice destinationOffice',
+      'originOffice destinationOffice recipient',
     );
     this.calculcatePrice(createdPackage);
     return createdPackage.save();
   }
 
   findAll() {
-    return this.packageModel.find().populate('originOffice destinationOffice');
+    return this.packageModel.find().populate('originOffice destinationOffice recipient');
   }
 
   findOne(id: mongoose.Schema.Types.ObjectId) {
@@ -31,7 +31,7 @@ export class PackagesService {
       .findOne({
         _id: id,
       })
-      .populate('originOffice destinationOffice');
+      .populate('originOffice destinationOffice recipient');
   }
 
   update(
