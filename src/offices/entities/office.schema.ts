@@ -1,11 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
-import { Package } from 'src/packages/entities/package.schema';
 
 export type OfficeDocument = HydratedDocument<Office>;
 
 @Schema()
 export class Office {
+  _id: mongoose.Schema.Types.ObjectId;
+
   @Prop({ required: true })
   name: string;
 
