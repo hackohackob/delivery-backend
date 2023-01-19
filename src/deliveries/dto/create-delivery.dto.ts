@@ -14,10 +14,6 @@ export class CreateDeliveryDto {
   @IsNotEmpty()
   destinationOffice: ObjectId;
 
-  @IsDate()
-  @IsNotEmpty()
-  departureDate: Date;
-
   @IsArray()
   @IsNotEmpty()
   packages: string[];
