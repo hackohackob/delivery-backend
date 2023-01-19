@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Types } from 'mongoose';
 import { Office, OfficeDocument } from 'src/offices/entities/office.schema';
 import { Package, PackageDocument } from 'src/packages/entities/package.schema';
+import { RouteDocument } from 'src/routes/entities/route.schema';
 import { Truck, TruckDocument } from 'src/trucks/entities/trucks.schema';
 import { DeliveryStatus } from './delivery.types';
 
@@ -30,6 +31,9 @@ export class Delivery {
 
   @Prop({ required: true, default: DeliveryStatus.PENDING })
   status: DeliveryStatus;
+
+  @Prop({ required: false, type: mongoose.Schema.Types.ObjectId, ref: 'Route' })
+  route: Types.ObjectId | RouteDocument;
 }
 
 export const DeliverySchema = SchemaFactory.createForClass(Delivery);
