@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model, Types } from 'mongoose';
+import mongoose, { Model, Query, QueryOptions, Types } from 'mongoose';
 import { PriceService } from 'src/utils/price.service';
 import { CreatePackageDto } from './dto/create-package.dto';
 import { UpdatePackageDto } from './dto/update-package.dto';
@@ -23,7 +23,9 @@ export class PackagesService {
   }
 
   findAll() {
-    return this.packageModel.find().populate('originOffice destinationOffice recipient');
+    return this.packageModel
+      .find()
+      .populate('originOffice destinationOffice recipient');
   }
 
   findOne(id: mongoose.Schema.Types.ObjectId) {
@@ -32,6 +34,13 @@ export class PackagesService {
         _id: id,
       })
       .populate('originOffice destinationOffice recipient');
+  }
+
+  findQuery(query: QueryOptions) {
+    return this.packageModel
+      .find(query)
+      .populate('originOffice destinationOffice')
+      .exec();
   }
 
   update(

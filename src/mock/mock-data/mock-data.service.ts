@@ -111,7 +111,6 @@ export class MockDataService {
     return this.clientService.removeAll();
   }
 
-
   async getTwoRandomOffices(): Promise<Office[]> {
     if (this.offices.length === 0) {
       this.offices = await this.officeService.findAll();

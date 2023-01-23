@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
   // CacheInterceptor,
   // UseInterceptors,
 } from '@nestjs/common';
@@ -13,11 +14,12 @@ import { PackagesService } from './packages.service';
 import { CreatePackageDto } from './dto/create-package.dto';
 import { UpdatePackageDto } from './dto/update-package.dto';
 import mongoose from 'mongoose';
+import { PackageStatus } from './entities/package-enums';
 
 //TODO: @UseInterceptors(CacheInterceptor)
 @Controller('packages')
 export class PackagesController {
-  constructor(private readonly packagesService: PackagesService) {}
+  constructor(private readonly packagesService: PackagesService) { }
 
   @Post()
   create(@Body() createPackageDto: CreatePackageDto) {
@@ -33,6 +35,22 @@ export class PackagesController {
   @Get(':id')
   findOne(@Param('id') id: mongoose.Schema.Types.ObjectId) {
     return this.packagesService.findOne(id);
+  }
+
+  @Get('in-office/:id')
+  findInOffice(@Param('id') id: mongoose.Schema.Types.ObjectId) {
+    return this.packagesService.findQuery({
+      $or: [
+        {
+          originOffice: id,
+          status: PackageStatus.RECEIVED,
+        },
+        {
+          destinationOffice: id,
+          status: PackageStatus.DELIVERED,
+        },
+      ],
+    });
   }
 
   @Patch(':id')
