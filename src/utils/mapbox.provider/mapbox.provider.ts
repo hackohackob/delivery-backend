@@ -72,8 +72,8 @@ export class MapboxProvider {
       return null;
     }
 
-    const originCoordinates = `${(origin as Office).lat},${(origin as Office).lng}`;
-    const destinationCoordinates = `${(destination as Office).lat},${(destination as Office).lng}`;
+    const originCoordinates = `${(origin as Office).lng},${(origin as Office).lat}`;
+    const destinationCoordinates = `${(destination as Office).lng},${(destination as Office).lat}`;
 
     return this.getPathBetweenPoints(originCoordinates, destinationCoordinates);
   }
