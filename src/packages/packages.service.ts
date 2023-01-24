@@ -68,8 +68,8 @@ export class PackagesService {
     return this.packageModel.remove({}).exec();
   }
 
-  calculcatePrice(pack: PackageDocument) {
-    const price = this.priceService.calculatePrice(
+  async calculcatePrice(pack: PackageDocument) {
+    const price = await this.priceService.calculatePrice(
       (pack.originOffice._id || pack.originOffice) as Types.ObjectId,
       (pack.destinationOffice._id || pack.destinationOffice) as Types.ObjectId,
       pack.size,

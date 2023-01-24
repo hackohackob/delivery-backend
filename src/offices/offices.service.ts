@@ -5,7 +5,6 @@ import { CreateOfficeDto } from './dto/create-office.dto';
 import { UpdateOfficeDto } from './dto/update-office.dto';
 import { Office, OfficeDocument } from './entities/office.schema';
 
-
 @Injectable()
 export class OfficesService {
   constructor(

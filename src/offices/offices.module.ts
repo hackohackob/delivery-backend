@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { OfficesService } from './offices.service';
 import { OfficesController } from './offices.controller';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -13,7 +13,7 @@ import { UtilsModule } from 'src/utils/utils.module';
         schema: OfficeSchema,
       },
     ]),
-    UtilsModule,
+    forwardRef(() => UtilsModule),
   ],
   controllers: [OfficesController],
   providers: [OfficesService],

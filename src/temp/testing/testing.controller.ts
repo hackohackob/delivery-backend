@@ -29,7 +29,7 @@ export class TestingController {
     const allOffices = await this.officeService.findAll();
     const firstOffice = allOffices[+fo];
     const secondOffice = allOffices[+so];
-    const route = await this.mapboxProvider.getRoute(
+    const route = await this.mapboxProvider.getPathBetweenPoints(
       `${firstOffice.lng},${firstOffice.lat}`,
       `${secondOffice.lng},${secondOffice.lat}`,
     );

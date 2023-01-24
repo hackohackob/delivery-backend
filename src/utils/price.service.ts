@@ -1,25 +1,25 @@
 import { Injectable } from '@nestjs/common';
-import { ObjectId, Types } from 'mongoose';
-import { Office } from 'src/offices/entities/office.schema';
+import { Types } from 'mongoose';
 import { PackageSize } from 'src/packages/entities/package-enums';
+import { Route } from 'src/routes/entities/route.schema';
 import { RoutesService } from 'src/routes/routes.service';
 
 @Injectable()
 export class PriceService {
   constructor(private routesService: RoutesService) {}
 
-  calculatePrice(
+  async calculatePrice(
     originOfficeId: Types.ObjectId,
     destinationOfficeId: Types.ObjectId,
     size: PackageSize,
     isFragile: boolean,
   ) {
     // TODO: probably make discount for long-time customers
-    const distance = this.routesService.getDistanceBetweenOffices(
+    const route: Route = await this.routesService.findRoute(
       originOfficeId,
       destinationOfficeId,
     );
-
+    const distance = route.distance;
     const multiplier = this.getMultiplier(size, isFragile);
 
     return distance * multiplier;

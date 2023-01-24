@@ -19,7 +19,7 @@ export class DeliveriesService {
     );
     const createdDelivery = new this.deliveryModel({
       ...createDeliveryDto,
-      route: route._id,
+      route: route['_id'],
     });
     return createdDelivery.save();
   }

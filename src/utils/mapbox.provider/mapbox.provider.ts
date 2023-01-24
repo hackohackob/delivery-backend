@@ -1,8 +1,11 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
 import * as polyline from '@mapbox/polyline';
+import { Office } from 'src/offices/entities/office.schema';
+import { ObjectId } from 'mongoose';
+import { OfficesService } from 'src/offices/offices.service';
 
 @Injectable()
 export class MapboxProvider {
@@ -11,7 +14,13 @@ export class MapboxProvider {
   private mapboxGeocodingUrl = `https://api.mapbox.com/geocoding/v5/`;
   private mapboxDrivingUrl = `https://api.mapbox.com/directions/v5/`;
 
-  constructor(configService: ConfigService, private httpService: HttpService) {
+  constructor(
+    configService: ConfigService,
+    private httpService: HttpService,
+    // @Inject(forwardRef(() => OfficesService))
+    private officeService: OfficesService,
+
+  ) {
     this.mapboxToken = configService.get<string>('MAPBOX_TOKEN');
   }
 
@@ -47,7 +56,29 @@ export class MapboxProvider {
     // return data.routes[0].duration;
   }
 
-  async getRoute(origin: string, destination: string) {
+  async getPathBetweenOffices(
+    origin: Office | ObjectId,
+    destination: Office | ObjectId,
+  ) {
+    if (!origin['_id'] && typeof origin === 'string') {
+      origin = await this.officeService.findOne(origin);
+    }
+
+    if (!destination['_id'] && typeof destination === 'string') {
+      destination = await this.officeService.findOne(destination);
+    }
+
+    if (!origin || !destination) {
+      return null;
+    }
+
+    const originCoordinates = `${(origin as Office).lat},${(origin as Office).lng}`;
+    const destinationCoordinates = `${(destination as Office).lat},${(destination as Office).lng}`;
+
+    return this.getPathBetweenPoints(originCoordinates, destinationCoordinates);
+  }
+
+  async getPathBetweenPoints(origin: string, destination: string) {
     const url = `${this.mapboxDrivingUrl}mapbox/driving-traffic/${origin};${destination}?geometries=polyline&access_token=${this.mapboxToken}`;
     return firstValueFrom(this.httpService.get(url))
       .then((response) => {

@@ -1,51 +1,76 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model, ObjectId, Types } from 'mongoose';
 import { Office } from 'src/offices/entities/office.schema';
+import { MapboxProvider } from 'src/utils/mapbox.provider/mapbox.provider';
 import { CreateRouteDto } from './dto/create-route.dto';
 import { UpdateRouteDto } from './dto/update-route.dto';
 import { Route, RouteDocument } from './entities/route.schema';
+import { RoutePath } from './entities/route.types';
 
 @Injectable()
 export class RoutesService {
   constructor(
     @InjectModel(Route.name) private routeModel: Model<RouteDocument>,
+    private mapboxProvider: MapboxProvider,
   ) {}
-  create(createRouteDto: CreateRouteDto) {
-    return 'This action adds a new route';
+
+  async create(createRouteDto: CreateRouteDto) {
+    const path = await this.mapboxProvider.getPathBetweenOffices(
+      createRouteDto.originOffice,
+      createRouteDto.destinationOffice,
+    );
+
+    const newRoute = new this.routeModel({
+      ...createRouteDto,
+      path,
+      distance: path.totalDistance,
+      duration: 0,
+    });
+    return newRoute.save();
   }
 
   findAll() {
-    return `This action returns all routes`;
+    return this.routeModel.find().exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} route`;
+  findOne(id: ObjectId) {
+    return this.routeModel.findById(id);
   }
 
-  update(id: number, updateRouteDto: UpdateRouteDto) {
-    return `This action updates a #${id} route`;
+  update(id: ObjectId, updateRouteDto: UpdateRouteDto) {
+    return this.routeModel.findByIdAndUpdate(id, updateRouteDto, {
+      new: true,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} route`;
+  remove(id: ObjectId) {
+    return this.routeModel.remove({ _id: id });
   }
 
-  getDistanceBetweenOffices(office1: Types.ObjectId, office2: Types.ObjectId) {
-    // TODO: calculate the distance between two offices
-    // console.log('distance between offices', office1, office2);
-    return Math.round(Math.random() * 1000);
-  }
-
-  findRoute(
+  async findRoute(
     originOffice: Types.ObjectId | Office,
     destinationOffice: Types.ObjectId | Office,
   ) {
-    return this.routeModel
+    const originOfficeId = originOffice['_id'] || originOffice;
+    const destinationOfficeId = destinationOffice['_id'] || destinationOffice;
+
+    const foundRoute = await this.routeModel
       .findOne({
-        originOffice: originOffice._id || originOffice,
-        destinationOffice: destinationOffice._id || destinationOffice,
+        originOffice: originOfficeId,
+        destinationOffice: destinationOfficeId,
       })
       .exec();
+
+    if (!foundRoute) {
+      const createRouteDto = {
+        originOffice: originOfficeId,
+        destinationOffice: destinationOfficeId,
+      };
+
+      return this.create(createRouteDto as CreateRouteDto);
+    } else {
+      return foundRoute;
+    }
   }
 }
