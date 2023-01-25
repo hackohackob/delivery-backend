@@ -4,6 +4,7 @@ import mongoose, { Model, Query, QueryOptions, Types } from 'mongoose';
 import { PriceService } from 'src/utils/price.service';
 import { CreatePackageDto } from './dto/create-package.dto';
 import { UpdatePackageDto } from './dto/update-package.dto';
+import { PackageStatus } from './entities/package-enums';
 import { Package, PackageDocument } from './entities/package.schema';
 
 @Injectable()
@@ -40,6 +41,22 @@ export class PackagesService {
     return this.packageModel
       .find(query)
       .populate('originOffice destinationOffice')
+      .exec();
+  }
+
+  setPackageStatus(id: mongoose.Schema.Types.ObjectId, status: PackageStatus) {
+    this.packageModel
+      .findOneAndUpdate(
+        {
+          _id: id,
+        },
+        {
+          status,
+        },
+        {
+          new: true,
+        },
+      )
       .exec();
   }
 

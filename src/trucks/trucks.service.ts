@@ -4,6 +4,7 @@ import mongoose, { Model } from 'mongoose';
 import { CreateTruckDto } from './dto/create-truck.dto';
 import { UpdateTruckDto } from './dto/update-truck.dto';
 import { Truck, TruckDocument } from './entities/trucks.schema';
+import { TruckStatus } from './entities/trucks.types';
 
 @Injectable()
 export class TrucksService {
@@ -23,6 +24,20 @@ export class TrucksService {
     return this.truckModel.findOne({
       _id: id,
     });
+  }
+
+  setTruckStatus(id: mongoose.Schema.Types.ObjectId, status: TruckStatus) {
+    return this.truckModel
+      .findOneAndUpdate(
+        {
+          _id: id,
+        },
+        {
+          status,
+        },
+        { new: true },
+      )
+      .exec();
   }
 
   update(id: string, updateTruckDto: UpdateTruckDto) {

@@ -19,7 +19,7 @@ export class Delivery {
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Office' })
   destinationOffice: Types.ObjectId | OfficeDocument;
 
-  @Prop({ required: true, default: Date.now() })
+  @Prop({ required: true })
   departureDate: Date;
 
   @Prop({
