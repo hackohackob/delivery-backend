@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model, Query, QueryOptions, Types } from 'mongoose';
-import { PriceService } from 'src/utils/price.service';
+import { PriceService } from '../utils/price.service';
 import { CreatePackageDto } from './dto/create-package.dto';
 import { UpdatePackageDto } from './dto/update-package.dto';
 import { PackageStatus } from './entities/package-enums';
@@ -19,8 +19,9 @@ export class PackagesService {
     createdPackage = await createdPackage.populate(
       'originOffice destinationOffice recipient',
     );
-    this.calculcatePrice(createdPackage);
-    return createdPackage.save();
+    await this.calculcatePrice(createdPackage);
+    createdPackage.save();
+    return createdPackage;
   }
 
   findAll() {
