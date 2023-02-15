@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Body, Headers, Request } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller('api')
@@ -13,5 +13,14 @@ export class AppController {
   @Get('test')
   getTest(): string {
     return 'testt 123';
+  }
+
+  @Get('request-info')
+  getRequestInfo(@Body() body, @Headers() headers, @Request() req) {
+    return {
+      headers,
+      query: req.query,
+      body,
+    };
   }
 }
