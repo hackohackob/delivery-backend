@@ -60,12 +60,12 @@ export class MapboxProvider {
     origin: Office | ObjectId,
     destination: Office | ObjectId,
   ) {
-    if (!origin['_id'] && typeof origin === 'string') {
-      origin = await this.officeService.findOne(origin);
+    if (!origin || !origin['name']) {
+      origin = await this.officeService.findOne(origin as ObjectId);
     }
 
-    if (!destination['_id'] && typeof destination === 'string') {
-      destination = await this.officeService.findOne(destination);
+    if (!destination || !destination['name']) {
+      destination = await this.officeService.findOne(destination as ObjectId);
     }
 
     if (!origin || !destination) {

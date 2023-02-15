@@ -24,7 +24,8 @@ export class PackagesController {
   @Post()
   create(@Body() createPackageDto: CreatePackageDto) {
     // TODO: calculate price
-    return this.packagesService.create(createPackageDto);
+    const createdPackage = this.packagesService.create(createPackageDto);
+    return createdPackage;
   }
 
   @Get()
