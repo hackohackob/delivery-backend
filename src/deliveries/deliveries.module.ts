@@ -6,6 +6,7 @@ import { Delivery, DeliverySchema } from './entities/delivery.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { TrucksModule } from 'src/trucks/trucks.module';
 import { PackagesModule } from 'src/packages/packages.module';
+import { OfficesModule } from 'src/offices/offices.module';
 
 @Module({
   imports: [
@@ -15,8 +16,10 @@ import { PackagesModule } from 'src/packages/packages.module';
     RoutesModule,
     TrucksModule,
     PackagesModule,
+    OfficesModule,
   ],
   controllers: [DeliveriesController],
   providers: [DeliveriesService],
+  exports: [DeliveriesService],
 })
 export class DeliveriesModule {}

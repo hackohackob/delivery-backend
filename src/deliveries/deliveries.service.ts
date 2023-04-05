@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
+import { OfficesService } from 'src/offices/offices.service';
 import { PackageStatus } from 'src/packages/entities/package-enums';
 import { PackagesService } from 'src/packages/packages.service';
 import { Route } from 'src/routes/entities/route.schema';
@@ -16,6 +17,7 @@ export class DeliveriesService {
     private routeService: RoutesService,
     private truckService: TrucksService,
     private packageService: PackagesService,
+    private officesService: OfficesService,
   ) {}
 
   async createDelivery(createDeliveryDto: any) {
@@ -40,6 +42,12 @@ export class DeliveriesService {
           packageId,
           PackageStatus.DISPATCHED,
         ),
+    );
+
+    // remove packages from origin office
+    await this.officesService.removePackagesFromOffice(
+      createDeliveryDto.originOffice,
+      createDeliveryDto.packages,
     );
 
     return createdDelivery.save();

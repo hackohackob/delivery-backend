@@ -42,7 +42,31 @@ export class MockDataController {
   }
 
   @Post('start-deliveries')
-  startDeliveries() {
-    return `This action starts deliveries`;
+  async startDeliveries() {
+    // get random origin office
+    // get random destination office that is not the same as origin
+    // get random package that is in origin office and status is received
+    // get random truck that has status free
+
+    const randomOffices = await this.mockDataService.getTwoRandomOffices();
+    const randomPackage = await this.mockDataService.getRandomPackage(
+      randomOffices[0]['_id'],
+      randomOffices[1]['_id'],
+    );
+
+    // if no package is found, try again with different offices
+    if (!randomPackage) {
+      return this.startDeliveries();
+    }
+
+    const randomTruck = await this.mockDataService.getRandomFreeTruck();
+
+    const delivery = this.mockDataService.startDelivery(
+      randomOffices,
+      randomPackage,
+      randomTruck,
+    );
+
+    return delivery;
   }
 }

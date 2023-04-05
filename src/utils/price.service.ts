@@ -19,7 +19,7 @@ export class PriceService {
       originOfficeId,
       destinationOfficeId,
     );
-    console.log('found route', route);
+    // console.log('found route', route);
     const distance = route.distance;
     const multiplier = this.getMultiplier(size, isFragile);
 

@@ -6,6 +6,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { Package } from 'src/packages/entities/package.schema';
 import { CreateOfficeDto } from './create-office.dto';
 
 export class UpdateOfficeDto extends PartialType(CreateOfficeDto) {
@@ -33,4 +34,7 @@ export class UpdateOfficeDto extends PartialType(CreateOfficeDto) {
   @IsString()
   @IsIn(['active', 'inactive'])
   status: string;
+
+  @IsOptional()
+  packages: Package[];
 }

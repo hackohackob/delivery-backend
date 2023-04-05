@@ -43,4 +43,20 @@ export class OfficesService {
   getOfficeLocation(id: ObjectId) {
     return this.officeModel.findById(id).select('lat lng').exec();
   }
+
+  removePackagesFromOffice(originOffice, packages) {
+    return this.officeModel
+      .findByIdAndUpdate(
+        originOffice,
+        {
+          $pull: {
+            packages: {
+              $in: packages,
+            },
+          },
+        },
+        { new: true },
+      )
+      .exec();
+  }
 }

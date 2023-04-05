@@ -15,6 +15,7 @@ import { TruckSize } from 'src/trucks/entities/trucks.types';
 import { Truck } from 'src/trucks/entities/trucks.schema';
 import { TrucksService } from 'src/trucks/trucks.service';
 import { CreateTruckDto } from 'src/trucks/dto/create-truck.dto';
+import { DeliveriesService } from 'src/deliveries/deliveries.service';
 
 @Injectable()
 export class MockDataService {
@@ -25,6 +26,7 @@ export class MockDataService {
     private officeService: OfficesService,
     private clientService: ClientsService,
     private trucksService: TrucksService,
+    private deliveriesService: DeliveriesService,
   ) {}
 
   async generateTrucks(numberOfTrucks: number) {
@@ -116,8 +118,16 @@ export class MockDataService {
       this.offices = await this.officeService.findAll();
     }
 
+    if (this.offices.length < 2) {
+      throw new Error('Not enough offices');
+    }
+
     const randomIndex1 = Math.floor(Math.random() * this.offices.length);
     const randomIndex2 = Math.floor(Math.random() * this.offices.length);
+    // get two different random indexes
+    if (randomIndex1 === randomIndex2) {
+      return this.getTwoRandomOffices();
+    }
 
     return [this.offices[randomIndex1], this.offices[randomIndex2]];
   }
@@ -127,5 +137,40 @@ export class MockDataService {
     const randomIndex = Math.floor(Math.random() * clients.length);
 
     return clients[randomIndex];
+  }
+
+  async getRandomPackage(
+    originOfficeId,
+    destinationOfficeId,
+  ): Promise<Package> {
+    const packages = await this.packageService.findQuery({
+      originOffice: originOfficeId,
+      destinationOffice: destinationOfficeId,
+      status: PackageStatus.RECEIVED,
+    });
+    const randomIndex = Math.floor(Math.random() * packages.length);
+
+    return packages[randomIndex];
+  }
+
+  async getRandomFreeTruck(): Promise<Truck> {
+    const trucks = await this.trucksService.findQuery({
+      isAvailable: true,
+    });
+    const randomIndex = Math.floor(Math.random() * trucks.length);
+
+    return trucks[randomIndex];
+  }
+
+  async startDelivery(offices: Office[], pkg: Package, truck: Truck) {
+
+    return this.deliveriesService.createDelivery({
+      originOffice: offices[0],
+      destinationOffice: offices[1],
+      packages: [pkg],
+      truck,
+    });
+
+    // return { packageUpdate, truckUpdate, officeUpdate };
   }
 }

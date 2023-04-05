@@ -26,6 +26,10 @@ export class TrucksService {
     });
   }
 
+  findQuery(query: any) {
+    return this.truckModel.find(query).exec();
+  }
+
   setTruckStatus(id: mongoose.Schema.Types.ObjectId, status: TruckStatus) {
     return this.truckModel
       .findOneAndUpdate(
